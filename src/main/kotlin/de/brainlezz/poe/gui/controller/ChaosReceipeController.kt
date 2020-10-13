@@ -94,6 +94,11 @@ class ChaosReceipeController() : Controller() {
                 ItemType.AMULETS to arrayOf(labelAmuletsToHigh, labelAmuletsPerfect, labelAmuletsTotal)
         )
 
+        initCountingMap()
+
+    }
+
+    private fun initCountingMap(){
         countingMap = mapOf(
                 ItemType.BOOTS to arrayOf(0,0,0),
                 ItemType.RINGS to arrayOf(0,0,0),
@@ -102,8 +107,7 @@ class ChaosReceipeController() : Controller() {
                 ItemType.BELTS to arrayOf(0,0,0),
                 ItemType.WEAPONS to arrayOf(0,0,0),
                 ItemType.BODYARMOURS to arrayOf(0,0,0),
-                ItemType.AMULETS to arrayOf(0,0,0)
-        )
+                ItemType.AMULETS to arrayOf(0,0,0))
     }
 
     private fun updateViews(){
@@ -166,6 +170,8 @@ class ChaosReceipeController() : Controller() {
                     // the most items in ilvl range look for a item in chaos recipe range
                     if (match == null || (t == maxOccuringType && !perfectILvlFound)) {
                         match = itemMap[t]?.find { item -> item.ilvl > ILVL_CHAOS_MIN }
+                        if(match != null)
+                            perfectILvlFound = true
                     }
                     // no suited item was found for itemType
                     if (match == null) {
@@ -174,7 +180,6 @@ class ChaosReceipeController() : Controller() {
                         // found a suiting item, remove it from the list to prevent multiple usage
                         chaosRecipe.add(match)
                         itemMap[t]?.remove(match)
-                        perfectILvlFound = true
                     }
 
                 }
@@ -221,9 +226,11 @@ class ChaosReceipeController() : Controller() {
 
         RemoteDataProvider.getItemsFromStash(
                 2) { items ->
+            itemMap.clear()
             items.forEach { addItemToMap(it)}
             printItemMap()
             Platform.runLater {
+                initCountingMap()
                 updateViews()
                 calculateChaosRecipe()
             }

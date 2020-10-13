@@ -134,6 +134,7 @@ class ChaosReceipeController() : Controller() {
     }
 
     private fun calculateChaosRecipe(){
+        chaosReceipePosibilities.clear()
         do {
             var foundAll = true
             var chaosRecipe = mutableListOf<Item>()
@@ -217,6 +218,7 @@ class ChaosReceipeController() : Controller() {
     private var getItemTypeString = { item : Item -> itemTypeRegex.find(item.icon)?.groups?.get(2)?.value?.toUpperCase()}
 
     fun loadTab(){
+
         RemoteDataProvider.getItemsFromStash(
                 2) { items ->
             items.forEach { addItemToMap(it)}

@@ -37,4 +37,9 @@ class MainViewController {
         ItemHighlightHelper.removeHighlights()
     }
 
+    fun reloadChaosTab(actionEvent: ActionEvent) {
+        ItemHighlightHelper.removeHighlights()
+        chaosRecipeController.loadTab()
+    }
+
 }

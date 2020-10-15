@@ -13,6 +13,7 @@ import javafx.stage.Stage
 import javafx.stage.StageStyle
 import java.awt.Robot
 import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
 
 class ItemHightlightWindow (var item : Item, color : Color) : Parent() {
 
@@ -82,7 +83,6 @@ class ItemHightlightWindow (var item : Item, color : Color) : Parent() {
     fun show() = stage.show()
 
     fun performClick(){
-
         robot.mouseMove((scene.window.x + 3).toInt(), (scene.window.y + 3).toInt())
         Event.fireEvent(stage, MouseEvent(MouseEvent.MOUSE_CLICKED, 0.0,
                 0.0, 0.0, 0.0, MouseButton.PRIMARY, 1, true, true, true, true,

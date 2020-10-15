@@ -4,6 +4,8 @@ import de.brainlezz.poe.gui.overlay.ItemHightlightWindow
 import de.brainlezz.poe.models.poe.Item
 import javafx.scene.control.Label
 import javafx.scene.paint.Color
+import java.awt.Robot
+import java.awt.event.KeyEvent
 
 object ItemHighlightHelper {
 
@@ -31,7 +33,7 @@ object ItemHighlightHelper {
 
     private fun updateLabel() {
         if(currentHighlightIndex == 0)
-            chaosSetLabel?.text = "No Set Highlighted"
+            chaosSetLabel?.text = "${completeChaosRecipes.size} Chaos Sets available"
         else
             chaosSetLabel?.text = "Chaos Set: ${currentHighlightIndex}/${completeChaosRecipes.size}"
     }
@@ -66,10 +68,14 @@ object ItemHighlightHelper {
     }
 
     fun removeHighlights(){
+        //var robot = Robot()
+        //robot.keyPress(KeyEvent.VK_CONTROL)
         overlayWindows.forEach {
             //it.performClick()
             it.hide()
+            //Thread.sleep(150)
         }
+        //robot.keyRelease(KeyEvent.VK_CONTROL)
         overlayWindows.clear()
     }
 

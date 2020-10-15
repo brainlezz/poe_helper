@@ -2,6 +2,7 @@ package de.brainlezz.poe.gui.controller
 
 import de.brainlezz.poe.gui.helper.ItemHighlightHelper
 import de.brainlezz.poe.gui.overlay.ItemHightlightWindow
+import de.brainlezz.poe.gui.settings.SettingsController
 import de.brainlezz.poe.models.poe.Item
 import de.brainlezz.poe.services.RemoteDataProvider
 import javafx.application.Platform
@@ -114,8 +115,8 @@ class ChaosReceipeController() : Controller() {
         labelMap.forEach{ entry ->
             var (itemType, labels) = entry
             var items = itemMap[itemType]
-            var toHigh = items?.sumOf{item -> if(item.ilvl > ILVL_CHAOS_MAX) 1.toLong() else 0.toLong()}
-            var perfect = items?.sumOf{item -> if(item.ilvl in ILVL_CHAOS_MIN..ILVL_CHAOS_MAX) 1.toLong() else 0.toLong()}
+            var toHigh = items?.sumOf{item -> if(item.ilvl > ILVL_CHAOS_MAX) 1.toLong() else 0.toLong()} ?: 0
+            var perfect = items?.sumOf{item -> if(item.ilvl in ILVL_CHAOS_MIN..ILVL_CHAOS_MAX) 1.toLong() else 0.toLong()} ?: 0
 
             labels[0].text = toHigh.toString()
             labels[1].text = perfect.toString()
@@ -147,7 +148,7 @@ class ChaosReceipeController() : Controller() {
             var maxOccuringType : ItemType? = null
             countingMap.forEach { (t, u) ->
                 if (u[1] > maxOccuring) {
-                    maxOccuring = u[2].toInt()
+                    maxOccuring = u[1].toInt()
                     maxOccuringType = t
                 }
             }
@@ -169,7 +170,7 @@ class ChaosReceipeController() : Controller() {
                     // if no item with an higher item level was found or if we are looking for the itemType we have
                     // the most items in ilvl range look for a item in chaos recipe range
                     if (match == null || (t == maxOccuringType && !perfectILvlFound)) {
-                        match = itemMap[t]?.find { item -> item.ilvl > ILVL_CHAOS_MIN }
+                        match = itemMap[t]?.find { item -> item.ilvl in ILVL_CHAOS_MIN..ILVL_CHAOS_MAX }
                         if(match != null)
                             perfectILvlFound = true
                     }
@@ -193,11 +194,13 @@ class ChaosReceipeController() : Controller() {
     }
 
     private var addItemToMap : (Item) -> Unit = { item ->
-        var type = getItemType(item)
-        if(!itemMap.containsKey(type))
-            itemMap[type] = mutableListOf(item)
-        else
-            itemMap[type]?.add(item)
+        if (!item.identified) {
+            var type = getItemType(item)
+            if (!itemMap.containsKey(type))
+                itemMap[type] = mutableListOf(item)
+            else
+                itemMap[type]?.add(item)
+        }
     }
 
     private var printItemMap = {
@@ -225,7 +228,7 @@ class ChaosReceipeController() : Controller() {
     fun loadTab(){
 
         RemoteDataProvider.getItemsFromStash(
-                2) { items ->
+                SettingsController.settings.tabIndex) { items ->
             itemMap.clear()
             items.forEach { addItemToMap(it)}
             printItemMap()

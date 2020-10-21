@@ -11,7 +11,7 @@ object ItemHighlightHelper {
 
     var chaosSetLabel: Label? = null
 
-    private var currentHighlightIndex = 0
+    public var currentHighlightIndex = 0
 
     private val overlayWindows = mutableListOf<ItemHightlightWindow>()
 
@@ -31,7 +31,7 @@ object ItemHighlightHelper {
 
         }
 
-    private fun updateLabel() {
+    fun updateLabel() {
         if(currentHighlightIndex == 0)
             chaosSetLabel?.text = "${completeChaosRecipes.size} Chaos Sets available"
         else

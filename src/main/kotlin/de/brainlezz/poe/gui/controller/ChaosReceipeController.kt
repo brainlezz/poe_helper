@@ -1,6 +1,7 @@
 package de.brainlezz.poe.gui.controller
 
 import de.brainlezz.poe.gui.helper.ItemHighlightHelper
+import de.brainlezz.poe.gui.helper.ScreenPositionUtils
 import de.brainlezz.poe.gui.overlay.ItemHightlightWindow
 import de.brainlezz.poe.gui.settings.SettingsController
 import de.brainlezz.poe.models.poe.Item
@@ -10,6 +11,10 @@ import javafx.fxml.FXML
 import javafx.scene.control.Label
 import javafx.scene.paint.Color
 import tornadofx.Controller
+import java.awt.Robot
+import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
+import java.util.*
 import kotlin.random.Random
 
 class ChaosReceipeController() : Controller() {
@@ -127,7 +132,7 @@ class ChaosReceipeController() : Controller() {
             else{
                 val validItems = items?.filter { it.ilvl >= ILVL_CHAOS_MIN }
                 labels[2].text = "${toHigh?.plus(perfect ?: 0)} (" +
-                        "${validItems?.count { getItemTypeString(it).equals("ONEHANDWEAPONS") }} OH)"
+                        "${validItems?.count { getItemTypeString(it).equals("ONEHANDWEAPONS") } ?: 0} OH)"
             }
 
             toHigh?.let { countingMap[itemType]?.set(0, it) };
@@ -238,6 +243,32 @@ class ChaosReceipeController() : Controller() {
                 calculateChaosRecipe()
             }
         }
+    }
+
+    fun fillInventory() {
+        var completeList = mutableListOf<Item>()
+        for(i in 1..2){
+            if(ItemHighlightHelper.currentHighlightIndex < chaosReceipePosibilities.size){
+                completeList.addAll(chaosReceipePosibilities[ItemHighlightHelper.currentHighlightIndex])
+                ItemHighlightHelper.currentHighlightIndex++
+            }
+        }
+        completeList.sortBy { item -> item.h * -10 - item.w }
+
+        var robot = Robot()
+        var random = Random(System.currentTimeMillis())
+        robot.keyPress(KeyEvent.VK_CONTROL)
+        completeList.forEach {
+            var (x,y) = ScreenPositionUtils.getItemScreenPos(it)
+            robot.mouseMove(x.toInt() + 10 , y.toInt() + 10)
+            robot.mousePress(InputEvent.BUTTON1_MASK);
+            robot.delay(20 + (random.nextFloat() * 30).toInt())
+            robot.mouseRelease(InputEvent.BUTTON1_MASK);
+            robot.delay(100 + (random.nextFloat() * 250).toInt())
+        }
+        robot.keyRelease(KeyEvent.VK_CONTROL)
+
+        ItemHighlightHelper.updateLabel()
     }
 }
 

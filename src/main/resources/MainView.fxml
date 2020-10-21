@@ -19,7 +19,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="Settings"  onAction="#openSettings"/>
+            <MenuItem mnemonicParsing="false" onAction="#openSettings" text="Settings" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Quit" />
           </items>
@@ -49,6 +49,7 @@
                                    <fx:include fx:id="chaosRecipe" source="ChaosIconView.fxml" />
                                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                        <children>
+                                          <Button mnemonicParsing="false" onAction="#fillInventory" text="Fill Inventory" />
                                           <Button fx:id="btnHighlightChaos" mnemonicParsing="false" onAction="#highlightChaosSet" text="Highlight Next" />
                                           <Label fx:id="labelChaosSets" alignment="CENTER" prefHeight="25.0" prefWidth="132.0" text="Chaos Set: 1/6" />
                                           <Button mnemonicParsing="false" onAction="#removeItemHighlights" text="Remove Highlights" />

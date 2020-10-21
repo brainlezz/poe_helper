@@ -57,4 +57,8 @@ class MainViewController {
         stage.show()
     }
 
+    fun fillInventory(actionEvent: ActionEvent) {
+        chaosRecipeController.fillInventory()
+    }
+
 }

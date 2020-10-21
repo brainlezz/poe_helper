@@ -1,5 +1,6 @@
 package de.brainlezz.poe.gui.overlay
 
+import de.brainlezz.poe.gui.helper.ScreenPositionUtils
 import de.brainlezz.poe.models.poe.Item
 import javafx.event.Event
 import javafx.event.EventHandler
@@ -21,49 +22,12 @@ class ItemHightlightWindow (var item : Item, color : Color) : Parent() {
 
     companion object{
         private val robot = Robot()
-
-        private val tab_positions = mapOf("FULLHD" to arrayOf(17,160,651,793),
-                                          "QHD" to arrayOf(23,216,864,1057))
-
-        val resolution = "QHD"
-
-        var isQuad = true
-
-        fun tab_pos_end_x() : Int {
-            return tab_positions[resolution]?.get(2)!!
-        }
-
-        fun tab_pos_start_x() : Int {
-            return tab_positions[resolution]?.get(0)!!
-        }
-
-        fun tab_pos_end_y() : Int {
-            return tab_positions[resolution]?.get(3)!!
-        }
-
-        fun tab_pos_start_y() : Int {
-            return tab_positions[resolution]?.get(1)!!
-        }
-
-        fun boxWidth() : Double{
-            val div = if(isQuad) 24.0 else 12.0
-            return (tab_pos_end_x() - tab_pos_start_x()).div(div)
-        }
-
-        fun boxHeight() : Double{
-            val div = if(isQuad) 24.0 else 12.0
-            return (tab_pos_end_y() - tab_pos_start_y()).div(div)
-        }
-
     }
 
     init {
 
-        var x = tab_pos_start_x() + (item.x * boxWidth())
-        var y = tab_pos_start_y() + (item.y * boxHeight())
-
-        var w = item.w * boxWidth()
-        var h = item.h * boxHeight()
+        var (x, y) = ScreenPositionUtils.getItemScreenPos(item)
+        var (w, h) = ScreenPositionUtils.getItemSize(item)
 
         var scene = Scene(this, w, h, color)
         stage.x = x
